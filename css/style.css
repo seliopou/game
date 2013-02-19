@@ -1,0 +1,102 @@
+[draggable] {
+  -moz-user-select: none;
+  -khtml-user-select: none;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+html {
+  min-width: 900px;
+}
+
+body {
+  font-family: "Helvetica Neue", Helvetica, sans-serif;
+  margin: 1em auto 4em auto;
+  width: 960px;
+}
+
+ul {
+  background: #eee url('http://noisepng.com/100-90-4.png') top center;
+  border: 2px solid #ccc;
+  height: 500px;
+  width: 280px;
+  margin: 2px;
+  padding: 6px;
+  float: left;
+  list-style-position: inside;
+  list-style-type: none;
+  overflow: auto;
+}
+
+li {
+  font-family:"Reenie Beanie",arial,sans-serif;
+  font-size: 180%;
+  background-color: #ffc;
+  height: 100px;
+  margin: 35px;
+  padding: 10px;
+  display: block;
+  -moz-box-shadow:5px 5px 7px rgba(33,33,33,1);
+  -webkit-box-shadow: 5px 5px 7px rgba(33,33,33,.7);
+  box-shadow: 5px 5px 7px rgba(33,33,33,.7);
+  -webkit-transition: all 10ms linear;
+  -moz-transition: all 10ms linear;
+  -o-transition: all 10ms linear;
+  -ms-transition: all 10ms linear;
+  transition: all 10ms linear;
+  border: 2px solid #ffc;
+}
+
+#info {
+  float: left;
+  margin-top: 10px;
+  width: 900px;
+}
+
+.icon {
+  border: 1px solid black;
+  padding: 2px;
+  margin: 2px;
+  height: 50px;
+  width: 50px;
+  float: right;
+}
+
+.over {
+  border: 2px dashed #000;
+}
+
+h1 {
+  font-size: 64px;
+  font-weight: 300;
+  letter-spacing: -2px;
+  margin: .3em 0 .1em 0;
+}
+
+small {
+  font-size: 32px;
+}
+
+li:nth-child(even) {
+  -o-transform:rotate(4deg);
+  -webkit-transform:rotate(4deg);
+  -moz-transform:rotate(4deg);
+  position:relative;
+  top:5px;
+}
+
+li:nth-child(3n) {
+  -o-transform:rotate(-3deg);
+  -webkit-transform:rotate(-3deg);
+  -moz-transform:rotate(-3deg);
+  position:relative;
+  top:-5px;
+}
+
+li:nth-child(5n) {
+  -o-transform:rotate(5deg);
+  -webkit-transform:rotate(5deg);
+  -moz-transform:rotate(5deg);
+  position:relative;
+  top:-10px;
+}
