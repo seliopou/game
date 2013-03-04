@@ -61,7 +61,7 @@ function activateDraggingForCard() {
 }
 
 function handleDragStart(e) {
-  this.style.opacity = '0.4';
+  d3.select(this).style('opacity', '0.4');
 
   e.dataTransfer.effectAllowed = 'move';
 
@@ -70,13 +70,12 @@ function handleDragStart(e) {
 }
 
 function handleDragEnd(e) {
-  this.style.opacity = '1.0';
+  d3.select(this).style('opacity', '1.0');
 
-  var sections = document.querySelectorAll(".section");
-
-  [].forEach.call(sections, function (section) {
-    section.classList.remove('over');
-  });
+  d3.selectAll(".section")
+      .each(function() {
+        d3.select(this).classed('over', false);
+      });
 }
 
 function handleDrop(e) {
