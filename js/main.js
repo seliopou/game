@@ -1,10 +1,20 @@
-var body = d3.select("#container");
-var board = body.append("div").attr("class", "board");
-var sections;
-var cards;
+function game() {
+  d3.select("#container")
+    .append("div")
+      .attr("id", "board");
+
+  update(data);
+}
+
 
 function update(data) {
-  sections = board.selectAll("ul").data(data, function(d) { return d.id });
+  function idx(d) {
+    return d.id;
+  }
+
+  var sections = d3.select('#board')
+    .selectAll("ul")
+      .data(data, idx);
 
   sections.enter().append("ul").
                    attr("class", "enter").
@@ -16,8 +26,8 @@ function update(data) {
                         attr("data-section-id", d.id);
                    });
 
-  cards = sections.selectAll("li").
-          data(function(d) { return d.cards; }, function(d) { return d.id; });
+  var cards = sections.selectAll("li")
+    .data(function(d) { return d.cards; }, idx);
 
   cards.enter().append("li").
                 attr("class", "enter").
@@ -156,4 +166,4 @@ var data = [
   }
 ];
 
-update(data);
+game();
