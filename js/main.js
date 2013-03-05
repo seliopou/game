@@ -37,6 +37,7 @@ function section() {
 
                     if(d.owner) {
                       d3.select(this).append("img").
+                         attr('draggable', false).
                          attr("src", d.owner).
                          attr("class", "icon");
                     }
@@ -73,8 +74,8 @@ function handleDragStart(e) {
 
   e.dataTransfer.effectAllowed = 'move';
 
-  e.dataTransfer.setData('section-id', section.datum().id);
-  e.dataTransfer.setData('card-id', card.datum().id);
+  e.dataTransfer.setData('section-id', section.datum().id.toString());
+  e.dataTransfer.setData('card-id', card.datum().id.toString());
 }
 
 function handleDragEnd(e) {
