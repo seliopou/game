@@ -34,8 +34,7 @@ function section() {
                   each(activateDraggingForCard).
                   each(function(d, i) {
                     d3.select(this).
-                       html(d.name).
-                       attr("data-card-id", d.id);
+                       html(d.name);
 
                     if(d.owner) {
                       d3.select(this).append("img").
@@ -70,12 +69,12 @@ function activateDraggingForCard() {
 }
 
 function handleDragStart(e) {
-  d3.select(this).style('opacity', '0.4');
+  var card = d3.select(this).style('opacity', '0.4');
 
   e.dataTransfer.effectAllowed = 'move';
 
   e.dataTransfer.setData('section-id', this.parentNode.getAttribute('data-section-id'));
-  e.dataTransfer.setData('card-id', this.getAttribute('data-card-id'));
+  e.dataTransfer.setData('card-id', card.datum().id);
 }
 
 function handleDragEnd(e) {
