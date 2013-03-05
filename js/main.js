@@ -22,8 +22,7 @@ function section() {
          each(activateDraggingForSection).
          each(function(d, i) {
            d3.select(this).
-              html(d.name).
-              attr("data-section-id", d.id);
+              html(d.name);
          });
 
     var cards = section.selectAll("li")
@@ -69,11 +68,12 @@ function activateDraggingForCard() {
 }
 
 function handleDragStart(e) {
-  var card = d3.select(this).style('opacity', '0.4');
+  var card = d3.select(this).style('opacity', '0.4'),
+      section = d3.select(this.parentNode);
 
   e.dataTransfer.effectAllowed = 'move';
 
-  e.dataTransfer.setData('section-id', this.parentNode.getAttribute('data-section-id'));
+  e.dataTransfer.setData('section-id', section.datum().id);
   e.dataTransfer.setData('card-id', card.datum().id);
 }
 
@@ -87,6 +87,8 @@ function handleDragEnd(e) {
 }
 
 function handleDrop(e) {
+  var section = d3.select(this);
+
   if (e.preventDefault) {
     e.preventDefault();
   }
@@ -95,7 +97,7 @@ function handleDrop(e) {
     e.stopPropagation();
   }
 
-  var toSectionId = this.getAttribute('data-section-id');
+  var toSectionId = section.datum().id.toString();
   var fromSectionId = e.dataTransfer.getData('section-id');
   var cardId = e.dataTransfer.getData('card-id');
 
