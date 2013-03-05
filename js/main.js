@@ -1,52 +1,61 @@
+var gsection = section();
+
 function game() {
   d3.select("#container")
     .append("div")
-      .attr("id", "board");
-
-  update(data);
+      .attr("id", "board")
+      .datum(data)
+      .call(gsection);
 }
 
-
-function update(data) {
+function section() {
   function idx(d) {
     return d.id;
   }
 
-  var sections = d3.select('#board')
-    .selectAll("ul")
-      .data(data, idx);
+  function chart(selection, data) {
+    var section = selection.selectAll('ul')
+        .data(data, idx);
 
-  sections.enter().append("ul").
-                   attr("class", "enter").
-                   attr("class", "section").
-                   each(activateDraggingForSection).
-                   each(function(d, i) {
-                     d3.select(this).
-                        html(d.name).
-                        attr("data-section-id", d.id);
-                   });
+    section.enter().append('ul').
+         attr("class", "section").
+         each(activateDraggingForSection).
+         each(function(d, i) {
+           d3.select(this).
+              html(d.name).
+              attr("data-section-id", d.id);
+         });
 
-  var cards = sections.selectAll("li")
-    .data(function(d) { return d.cards; }, idx);
+    var cards = section.selectAll("li")
+        .data(function(d) { return d.cards; }, idx);
 
-  cards.enter().append("li").
-                attr("class", "enter").
-                attr("draggable", "true").
-                each(activateDraggingForCard).
-                each(function(d, i) {
-                  d3.select(this).
-                     html(d.name).
-                     attr("data-card-id", d.id);
+    cards.enter().append("li").
+                  attr("draggable", "true").
+                  each(activateDraggingForCard).
+                  each(function(d, i) {
+                    d3.select(this).
+                       html(d.name).
+                       attr("data-card-id", d.id);
 
-                  if(d.owner) {
-                    d3.select(this).append("img").
-                       attr("src", d.owner).
-                       attr("class", "icon");
-                  }
-                });
+                    if(d.owner) {
+                      d3.select(this).append("img").
+                         attr("src", d.owner).
+                         attr("class", "icon");
+                    }
+                  });
 
-  cards.exit().remove();
+    cards.exit().remove();
+  }
+
+  var my = function(selection) {
+    selection.each(function(data) {
+      return chart(d3.select(this), data);   
+    });
+  };
+
+  return my;
 }
+
 
 function activateDraggingForSection() {
   this.addEventListener('dragenter', handleDragEnter, false);
@@ -134,7 +143,7 @@ function moveCard(fromSectionId, toSectionId, cardId) {
     }
   }
 
-  update(data);
+  d3.select('#board').call(gsection);
 }
 
 // Demo.
