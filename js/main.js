@@ -8,10 +8,93 @@ function game() {
       .call(gsection);
 }
 
-function section() {
-  function idx(d) {
-    return d.id;
+function idx(d) {
+  return d.id;
+}
+
+function editable(toedit) {
+  console.log('editing... setup');
+  return function(selection) {
+    selection
+        .on('click', function(d) {
+          console.log('wtf');
+          var p = d3.select(this.parentNode);
+          d3.select(this).remove()
+          p.call(toedit);
+        });
+  };
+}
+
+function card() {
+  function chart(selection, data) {
+    var cards = selection.selectAll('li')
+        .data(function(d) { return d.cards; }, idx);
+      
+    cards
+      .enter().append("li")
+        .attr("draggable", "true")
+        .each(activateDraggingForCard)
+        .append('span');
+
+    cards.filter(function(d) { return d.owner; })
+        .append("img");
+
+    cards.select('span')
+        .html(function(d) { return d.name });
+      
+
+    cards.select('img').
+         attr('draggable', false).
+         attr("src", function(d) { return d.owner; }).
+         attr("class", "icon");
+
+    cards.exit().remove();
+
+    function toediticon(selection) {
+      selection.append('select')
+        .on('change', function(d) {
+          console.log('called');
+          d.owner = d3.event.target.selectedOptions[0].value;
+          selection.select('select').remove();
+          selection.append('img');
+          d3.select('#board').call(gsection);
+        })
+        .selectAll('option')
+            .data(owners)
+          .enter().append('option')
+            .attr('value', function(d) { return d; })
+            .text(function(d) { return d; });
+    }
+
+    function toedittitle(selection) {
+      selection.selectAll('omgwtfthisdoesntdoanything')
+          .data(function(d) { return d; })
+        .append('input')
+        .property('value', function(d) { return d.name; })
+        .on('keydown', function(d) {
+          if (d3.event.keyCode == 13) {
+            d.name = selection.select('input').property('value');
+            selection.select('input').remove();
+            selection.append('span');
+            d3.select('#board').call(gsection);
+          }
+        });
+    };
+
+    cards.select('span').call(editable(toedittitle));
+    cards.select('img').call(editable(toediticon));
   }
+
+  var my = function(selection) {
+    return selection.each(function(data) {
+      chart(d3.select(this), data);   
+    });
+  };
+
+  return my;
+}
+
+function section() {
 
   function chart(selection, data) {
     var section = selection.selectAll('ul')
@@ -19,42 +102,19 @@ function section() {
 
     section.enter().append('ul').
          attr("class", "section").
-         each(activateDraggingForSection).
-         each(function(d, i) {
-           d3.select(this).
-              html(d.name);
-         });
+         each(activateDraggingForSection);
 
-    var cards = section.selectAll("li")
-        .data(function(d) { return d.cards; }, idx);
-
-    cards.enter().append("li").
-                  attr("draggable", "true").
-                  each(activateDraggingForCard).
-                  each(function(d, i) {
-                    d3.select(this).
-                       html(d.name);
-
-                    if(d.owner) {
-                      d3.select(this).append("img").
-                         attr('draggable', false).
-                         attr("src", d.owner).
-                         attr("class", "icon");
-                    }
-                  });
-
-    cards.exit().remove();
+    section.call(card());
   }
 
   var my = function(selection) {
-    selection.each(function(data) {
-      return chart(d3.select(this), data);   
+    return selection.each(function(data) {
+      chart(d3.select(this), data);   
     });
   };
 
   return my;
 }
-
 
 function activateDraggingForSection() {
   this.addEventListener('dragenter', handleDragEnter, false);
@@ -175,5 +235,28 @@ var data = [
     ]
   }
 ];
+
+var owners = data.reduce(function(acc, s) {
+  return s.cards.reduce(function(acc, c) {
+    if (c.owner) {
+      acc.push(c.owner);
+    }
+
+    return acc;
+  }, acc);
+}, []);
+
+/*
+function editableIcon(pred) {
+  return {
+    enter: function(d) {
+      append('img') if pred;
+    }
+
+    update: function() {
+    }
+  }
+}
+*/
 
 game();
